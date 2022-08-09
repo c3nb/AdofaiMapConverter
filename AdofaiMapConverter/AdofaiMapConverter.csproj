@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A5E71C1E-B7B0-4AD0-927C-0A09F4903241}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AdofaiMapConverter</RootNamespace>
+    <AssemblyName>AdofaiMapConverter</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actions\Action.cs" />
+    <Compile Include="Actions\ActionUtils.cs" />
+    <Compile Include="Actions\AnimateTrack.cs" />
+    <Compile Include="Actions\AutoPlayTiles.cs" />
+    <Compile Include="Actions\Bloom.cs" />
+    <Compile Include="Actions\Bookmark.cs" />
+    <Compile Include="Actions\ChangeTrack.cs" />
+    <Compile Include="Actions\Checkpoint.cs" />
+    <Compile Include="Actions\ColorTrack.cs" />
+    <Compile Include="Actions\CustomBackground.cs" />
+    <Compile Include="Actions\EditorComment.cs" />
+    <Compile Include="Actions\Flash.cs" />
+    <Compile Include="Actions\FreeRoam.cs" />
+    <Compile Include="Actions\FreeRoamRemove.cs" />
+    <Compile Include="Actions\FreeRoamTwirl.cs" />
+    <Compile Include="Actions\HallOfMirrors.cs" />
+    <Compile Include="Actions\Hide.cs" />
+    <Compile Include="Actions\Hold.cs" />
+    <Compile Include="Actions\MoveCamera.cs" />
+    <Compile Include="Actions\MoveDecorations.cs" />
+    <Compile Include="Actions\MoveTrack.cs" />
+    <Compile Include="Actions\MultiPlanet.cs" />
+    <Compile Include="Actions\Twirl.cs" />
+    <Compile Include="Actions\Pause.cs" />
+    <Compile Include="Actions\PlaySound.cs" />
+    <Compile Include="Actions\PositionTrack.cs" />
+    <Compile Include="Actions\RecolorTrack.cs" />
+    <Compile Include="Actions\RepeatEvents.cs" />
+    <Compile Include="Actions\ScaleMargin.cs" />
+    <Compile Include="Actions\ScaleRadius.cs" />
+    <Compile Include="Actions\ScreenScroll.cs" />
+    <Compile Include="Actions\ScreenTile.cs" />
+    <Compile Include="Actions\SetConditionalEvents.cs" />
+    <Compile Include="Actions\SetFilter.cs" />
+    <Compile Include="Actions\SetHitsound.cs" />
+    <Compile Include="Actions\SetHoldSound.cs" />
+    <Compile Include="Actions\SetPlanetRotation.cs" />
+    <Compile Include="Actions\SetSpeed.cs" />
+    <Compile Include="Actions\SetText.cs" />
+    <Compile Include="Actions\ShakeScreen.cs" />
+    <Compile Include="Actions\UnknownAction.cs" />
+    <Compile Include="Converters\AllMidspinConverter.cs" />
+    <Compile Include="Converters\MapConverterBase.cs" />
+    <Compile Include="Converters\OuterConverter.cs" />
+    <Compile Include="CustomLevel.cs" />
+    <Compile Include="Decorations\AddDecoration.cs" />
+    <Compile Include="Decorations\Decoration.cs" />
+    <Compile Include="Decorations\DecorationUtils.cs" />
+    <Compile Include="Decorations\AddText.cs" />
+    <Compile Include="Decorations\UnknownDecoration.cs" />
+    <Compile Include="Helpers\AngleHelper.cs" />
+    <Compile Include="Helpers\JsonHelper.cs" />
+    <Compile Include="Helpers\LETHelper.cs" />
+    <Compile Include="Helpers\TileHelper.cs" />
+    <Compile Include="Tile.cs" />
+    <Compile Include="TileMeta.cs" />
+    <Compile Include="Types\BgDisplayMode.cs" />
+    <Compile Include="Types\CamMovementType.cs" />
+    <Compile Include="Types\DecPlacementType.cs" />
+    <Compile Include="Types\Ease.cs" />
+    <Compile Include="Types\EasePartBehaviour.cs" />
+    <Compile Include="Types\Filter.cs" />
+    <Compile Include="Types\FlashPlane.cs" />
+    <Compile Include="Types\FontName.cs" />
+    <Compile Include="Types\GameSound.cs" />
+    <Compile Include="Types\Hitbox.cs" />
+    <Compile Include="Types\HitSound.cs" />
+    <Compile Include="Types\HoldEndSound.cs" />
+    <Compile Include="Types\HoldLoopSound.cs" />
+    <Compile Include="Types\HoldMidSound.cs" />
+    <Compile Include="Types\HoldMidSoundTimingRelativeTo.cs" />
+    <Compile Include="Types\HoldMidSoundType.cs" />
+    <Compile Include="Types\HoldStartSound.cs" />
+    <Compile Include="Types\LevelEventType.cs" />
+    <Compile Include="LevelSettings.cs" />
+    <Compile Include="JSON.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types\SpecialArtistType.cs" />
+    <Compile Include="Types\SpeedType.cs" />
+    <Compile Include="Types\TileAngle.cs" />
+    <Compile Include="Types\TileRelativeTo.cs" />
+    <Compile Include="Types\Toggle.cs" />
+    <Compile Include="Types\TrackAnimationType.cs" />
+    <Compile Include="Types\TrackAnimationType2.cs" />
+    <Compile Include="Types\TrackColorPulse.cs" />
+    <Compile Include="Types\TrackColorType.cs" />
+    <Compile Include="Types\TrackStyle.cs" />
+    <Compile Include="Types\Vector2.cs" />
+    <Compile Include="Utils.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

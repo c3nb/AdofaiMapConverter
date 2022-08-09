@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdofaiMapConverter", "AdofaiMapConverter\AdofaiMapConverter.csproj", "{A5E71C1E-B7B0-4AD0-927C-0A09F4903241}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdofaiMapConverter.Tests", "AdofaiMapConverter.Tests\AdofaiMapConverter.Tests.csproj", "{847C8CDF-554B-44D2-9BFD-50FF203E6F09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A5E71C1E-B7B0-4AD0-927C-0A09F4903241}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5E71C1E-B7B0-4AD0-927C-0A09F4903241}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5E71C1E-B7B0-4AD0-927C-0A09F4903241}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5E71C1E-B7B0-4AD0-927C-0A09F4903241}.Release|Any CPU.Build.0 = Release|Any CPU
+		{847C8CDF-554B-44D2-9BFD-50FF203E6F09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{847C8CDF-554B-44D2-9BFD-50FF203E6F09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{847C8CDF-554B-44D2-9BFD-50FF203E6F09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{847C8CDF-554B-44D2-9BFD-50FF203E6F09}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4207C2D7-5DF3-4AB1-93CC-7DA6F2BDC22F}
+	EndGlobalSection
+EndGlobal
