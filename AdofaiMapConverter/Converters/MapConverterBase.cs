@@ -1,11 +1,9 @@
-﻿using System;
+﻿using AdofaiMapConverter.Actions;
+using AdofaiMapConverter.Helpers;
+using AdofaiMapConverter.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AdofaiMapConverter.Actions;
-using AdofaiMapConverter.Types;
-using AdofaiMapConverter.Helpers;
 
 namespace AdofaiMapConverter.Converters
 {
@@ -39,10 +37,10 @@ namespace AdofaiMapConverter.Converters
                     Tile newTile = tile.Copy();
                     tileProcessor(newTile);
                     if (!newTile.angle.isMidspin)
-                        newTile.angle = (TileAngle)curStaticAngle.GeneralizeAngle();
-                    if (newTile.actions.GetValueSafeOrAdd(LevelEventType.Twirl, new List<Actions.Action>()).Count % 2 == 1)
+                        newTile.angle = TileAngle.CreateNormal(curStaticAngle);
+                    if (newTile.GetActions(LevelEventType.Twirl).Count % 2 == 1)
                         reversed = !reversed;
-                    List<Actions.Action> multiPlanetActions = newTile.actions.GetValueSafeOrAdd(LevelEventType.MultiPlanet, new List<Actions.Action>());
+                    var multiPlanetActions = newTile.GetActions(LevelEventType.MultiPlanet);
                     if (multiPlanetActions.Any())
                     {
                         MultiPlanet mp = (MultiPlanet)multiPlanetActions[0];
@@ -58,26 +56,34 @@ namespace AdofaiMapConverter.Converters
         public static CustomLevel Convert(CustomLevel customLevel, Func<ApplyEach, List<Tile>> applyEach, Action<CustomLevel> customLevelProcessor)
         {
             List<Tile> tiles = customLevel.Tiles;
-            List<Tile> newTiles = new List<Tile>();
-            newTiles.Add(new Tile(TileAngle.Zero) { actions = tiles[0].actions });
-            List<List<int>> newTileAmounts = new List<List<int>>();
-            newTileAmounts.Add(new List<int>() { 0, 1 });
+            List<Tile> newTiles = new List<Tile>
+            {
+                new Tile(TileAngle.Zero) { actions = tiles[0].actions }
+            };
+            List<(int, int)> newTileAmounts = new List<(int, int)>(tiles.Count)
+            {
+                (0, 1)
+            };
             for (int i = 1; i < tiles.Count;)
             {
                 List<Tile> oneTimingTiles = GetSameTimingTiles(tiles, i);
                 List<Tile> newTilesResult = applyEach(new ApplyEach(i, oneTimingTiles));
-                newTileAmounts.Add(new List<int>() { i, newTilesResult.Count });
+                newTileAmounts.Add((i, newTilesResult.Count));
                 newTiles.AddRange(newTilesResult);
                 i += oneTimingTiles.Count;
             }
-            CustomLevel newCustomLevel = customLevel.Copy();
-            newCustomLevel.Tiles = newTiles;
+            CustomLevel newCustomLevel = new CustomLevel
+            {
+                Setting = customLevel.Setting,
+                Tiles = newTiles
+            };
             customLevelProcessor(newCustomLevel);
             return ArrangeCustomLevelSync(customLevel, newCustomLevel.MakeTiles(), newTileAmounts);
         }
-        public static CustomLevel ArrangeCustomLevelSync(CustomLevel oldCustomLevel, CustomLevel newCustomLevel, List<List<int>> newTileAmountPairs)
+        public static CustomLevel ArrangeCustomLevelSync(CustomLevel oldCustomLevel, CustomLevel newCustomLevel, List<(int, int)> newTileAmountPairs)
         {
             CustomLevel finalLevel = newCustomLevel.Copy();
+
             List<Tile> oldTiles = oldCustomLevel.Tiles;
             List<Tile> newTiles = newCustomLevel.Tiles;
             List<Tile> finalTiles = finalLevel.Tiles;
@@ -87,15 +93,15 @@ namespace AdofaiMapConverter.Converters
 
             double prevBpm = newCustomLevel.Setting.bpm;
             int newTileIdx = 0;
-            foreach (List<int> newTileAmountPair in newTileAmountPairs)
+            foreach ((int, int) newTileAmountPair in newTileAmountPairs)
             {
-                int oldTileIdx = newTileAmountPair[0];
-                int newTileAmount = newTileAmountPair[1];
+                int oldTileIdx = newTileAmountPair.Item1;
+                int newTileAmount = newTileAmountPair.Item2;
 
                 List<Tile> timingTiles = GetSameTimingTiles(oldTiles, oldTileIdx);
                 List<Tile> newTimingTiles = finalTiles.GetRange(newTileIdx, newTileAmount);
 
-                newTimingTiles.ForEach(t => t.actions.Remove(LevelEventType.SetSpeed));
+                newTimingTiles.ForEach(t => t.GetActions(LevelEventType.SetSpeed).Clear());
 
                 if (oldTileIdx == 0)
                 {
@@ -105,7 +111,7 @@ namespace AdofaiMapConverter.Converters
                     int originalStraightTravelMs = oldCustomLevel.Setting.offset;
                     double additionalTravelMs = originalZeroTileTravelMs - newZeroTileTravelMs;
 
-                    newCustomLevel.Setting.offset = originalStraightTravelMs + (int)additionalTravelMs;
+                    finalLevel.Setting.offset = originalStraightTravelMs + (int)additionalTravelMs;
                 }
                 else if (newTileIdx + newTileAmount < newTiles.Count)
                 {
@@ -114,9 +120,9 @@ namespace AdofaiMapConverter.Converters
                     double newTravelAngle = TileMeta.CalculateTotalTravelAndPlanetAngle(newTiles.GetRange(newTileIdx, newTileAmount));
                     double multiplyValue = newTravelAngle / timingTravelAngle;
                     double curBpm = timingBpm * multiplyValue;
-                    if (!curBpm.FuzzyEquals(prevBpm))
+                    if (Math.Abs(curBpm - prevBpm) > 0.0000001)
                     {
-                        if (!curBpm.IsFinite() || curBpm.FuzzyEquals(0))
+                        if (!curBpm.IsFinite() || curBpm == 0)
                             Console.WriteLine($"Wrong TempBpm Value ({curBpm}, {timingBpm}, multiplyValue={multiplyValue}, newTravelAngle={newTravelAngle}, timingTravelAngle={timingTravelAngle})");
                         newTimingTiles[0].AddAction(new SetSpeed() { speedType = SpeedType.Bpm, beatsPerMinute = curBpm });
                     }
@@ -147,14 +153,14 @@ namespace AdofaiMapConverter.Converters
             }
             return finalLevel.MakeTiles();
         }
-        public static List<int> GetOldTileNewTileMap(List<List<int>> newTileAmountPairs, List<Tile> oldTiles, Func<int, int, int, int> boundFunction)
+        public static List<int> GetOldTileNewTileMap(List<(int, int)> newTileAmountPairs, List<Tile> oldTiles, Func<int, int, int, int> boundFunction)
         {
-            List<int> oldTileNewTileMap = new List<int>();
+            List<int> oldTileNewTileMap = new List<int>(oldTiles.Count);
             int newTileIdx = 0;
-            foreach (List<int> newTileAmountPair in newTileAmountPairs)
+            foreach ((int, int) newTileAmountPair in newTileAmountPairs)
             {
-                int oldTileIdx = newTileAmountPair[0];
-                int newTileAmount = newTileAmountPair[1];
+                int oldTileIdx = newTileAmountPair.Item1;
+                int newTileAmount = newTileAmountPair.Item2;
                 List<Tile> timingTiles = GetSameTimingTiles(oldTiles, oldTileIdx);
                 int oldTileAmount = timingTiles.Count;
                 for (int i = 0; i < timingTiles.Count; i++)
@@ -282,7 +288,7 @@ namespace AdofaiMapConverter.Converters
                         double angleOffset = sf.angleOffset;
                         if (sf.disableOthers == Toggle.Enabled &&
                             (angleOffset > tm.travelAngle ||
-                            angleOffset.FuzzyEquals(tm.travelAngle)))
+                            angleOffset == tm.travelAngle))
                             angleOffset = Math.Max(angleOffset - 0.0001, 0);
                         sf.angleOffset = angleOffset;
                         return sf;

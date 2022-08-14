@@ -1,4 +1,5 @@
 ﻿using AdofaiMapConverter.Helpers;
+using System;
 
 namespace AdofaiMapConverter.Types
 {
@@ -10,8 +11,19 @@ namespace AdofaiMapConverter.Types
         public static readonly TileAngle Zero = new TileAngle(0);
         public static TileAngle CreateNormal(double angle) => new TileAngle(angle.GeneralizeAngle());
         public bool isMidspin;
-        public double angle;
+        private double angle;
+        public double Angle 
+        { 
+            get
+            {
+                if (isMidspin)
+                    throw new InvalidOperationException("This Angle Is Midspin!");
+                return angle;
+            }
+            set => angle = value; 
+        }
+
         public static explicit operator TileAngle(double angle) => new TileAngle(angle);
-        public static explicit operator double(TileAngle angle) => angle.angle;
+        public static explicit operator double(TileAngle angle) => angle.Angle;
     }
 }

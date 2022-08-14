@@ -85,8 +85,19 @@
     <Compile Include="Actions\ShakeScreen.cs" />
     <Compile Include="Actions\UnknownAction.cs" />
     <Compile Include="Converters\AllMidspinConverter.cs" />
+    <Compile Include="Converters\BpmMultiplyConverter.cs" />
+    <Compile Include="Converters\ChaosConverter.cs" />
+    <Compile Include="Converters\Effects\NonEffectConverter.cs" />
+    <Compile Include="Converters\Effects\OnlyBpmSetConverter.cs" />
+    <Compile Include="Converters\Effects\TransparentConverter.cs" />
+    <Compile Include="Converters\LinearConverter.cs" />
     <Compile Include="Converters\MapConverterBase.cs" />
+    <Compile Include="Converters\NoSpeedChangeConverter.cs" />
     <Compile Include="Converters\OuterConverter.cs" />
+    <Compile Include="Converters\PlanetConverter.cs" />
+    <Compile Include="Converters\PseudoConverter.cs" />
+    <Compile Include="Converters\ShapeConverter.cs" />
+    <Compile Include="Converters\TwirlConverter.cs" />
     <Compile Include="CustomLevel.cs" />
     <Compile Include="Decorations\AddDecoration.cs" />
     <Compile Include="Decorations\Decoration.cs" />
@@ -96,6 +107,7 @@
     <Compile Include="Helpers\AngleHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\LETHelper.cs" />
+    <Compile Include="Helpers\RandomHelper.cs" />
     <Compile Include="Helpers\TileHelper.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="TileMeta.cs" />

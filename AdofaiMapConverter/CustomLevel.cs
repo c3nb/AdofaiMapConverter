@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using JSON;
 using AdofaiMapConverter.Actions;
 using AdofaiMapConverter.Decorations;
@@ -10,7 +9,7 @@ using AdofaiMapConverter.Types;
 
 namespace AdofaiMapConverter
 {
-    public class CustomLevel
+    public class CustomLevel : System.ICloneable
     {
         public List<Tile> Tiles;
         public LevelSetting Setting;
@@ -19,11 +18,19 @@ namespace AdofaiMapConverter
             Tiles = new List<Tile>();
             Setting = new LevelSetting();
         }
+        public object Clone() => Copy();
         public CustomLevel Copy()
         {
             CustomLevel customLevel = new CustomLevel();
             customLevel.Tiles = Tiles.Select(t => t.Copy()).ToList();
             customLevel.Setting = Setting.Copy();
+            return customLevel;
+        }
+        public CustomLevel ShallowCopy()
+        {
+            CustomLevel customLevel = new CustomLevel();
+            customLevel.Tiles = Tiles;
+            customLevel.Setting = Setting;
             return customLevel;
         }
         public static CustomLevel Read(JsonNode node)
@@ -43,7 +50,7 @@ namespace AdofaiMapConverter
                 throw new System.InvalidOperationException("actions Not Found.");
             LevelSetting setting = LevelSetting.FromNode(s);
             if (setting.version > 9) throw new System.NotSupportedException("This MapConverter Does Not Supports Greater Then Version 9.");
-            List<TileAngle> tileAngles = hasNotpd ? AngleHelper.ReadAngleData(ad) : AngleHelper.ReadPathData(pd.ToString().TrimLR());
+            List<TileAngle> tileAngles = hasNotpd ? AngleHelper.ReadAngleData(ad.Values.Select(n => n.AsDouble)) : AngleHelper.ReadPathData(pd.ToString().TrimLR());
             tileAngles.Insert(0, TileAngle.Zero);
             Dictionary<int, List<Decoration>> decorations = new Dictionary<int, List<Decoration>>();
             if (!(dc is JsonLazyCreator))
@@ -95,7 +102,7 @@ namespace AdofaiMapConverter
                 for (int i = 1; i < Tiles.Count; i++)
                 {
                     Tile tile = Tiles[i];
-                    ad.Add(tile.angle.isMidspin ? 999 : tile.angle.angle);
+                    ad.Add(tile.angle.isMidspin ? 999 : tile.angle.Angle);
                 }
             }
             else
@@ -108,12 +115,12 @@ namespace AdofaiMapConverter
                     {
                         Tile tile = Tiles[i];
                         TileAngle nextAngle = tile.angle;
-                        char c = AngleHelper.GetCharFromAngle(curAngle.isMidspin ? 999 : curAngle.angle, nextAngle.isMidspin ? 999 : nextAngle.angle);
+                        char c = AngleHelper.GetCharFromAngle(curAngle.isMidspin ? 999 : curAngle.Angle, nextAngle.isMidspin ? 999 : nextAngle.Angle);
                         if (c == char.MinValue) throw new System.Exception();
                         pdBuilder.Append(c);
                         curAngle = nextAngle;
                     }
-                    char last = AngleHelper.GetCharFromAngle(curAngle.isMidspin ? 999 : curAngle.angle, 999);
+                    char last = AngleHelper.GetCharFromAngle(curAngle.isMidspin ? 999 : curAngle.Angle, 999);
                     pdBuilder.Append(last);
                     root["pathData"] = pdBuilder.ToString();
                 }
@@ -125,7 +132,7 @@ namespace AdofaiMapConverter
                     for (int i = 1; i < Tiles.Count; i++)
                     {
                         Tile tile = Tiles[i];
-                        ad.Add(tile.angle.isMidspin ? 999 : tile.angle.angle);
+                        ad.Add(tile.angle.isMidspin ? 999 : tile.angle.Angle);
                     }
                 }
             }

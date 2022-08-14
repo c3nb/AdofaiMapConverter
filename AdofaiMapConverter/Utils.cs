@@ -24,7 +24,7 @@ namespace AdofaiMapConverter
         public static T Parse<T>(this string value) where T : Enum
         {
             try { return (T)Enum.Parse(typeof(T), value); }
-            catch { return default(T); }
+            catch { return default; }
         }
         public static List<T> CastList<T>(this IList list)
         {
@@ -39,18 +39,14 @@ namespace AdofaiMapConverter
             => (*(long*)&d & 0x7FFFFFFFFFFFFFFFL) > 0x7FF0000000000000L;
         public unsafe static bool IsInfinity(this double d)
             => (*(long*)&d & 0x7FFFFFFFFFFFFFFF) == 0x7FF0000000000000;
-        public static bool FuzzyEquals(this double a, double b)
-            => CopySign(a - b, 1) <= 0.0000001;
-        public static double CopySign(double x, double y)
-        {
-            long xbits = BitConverter.DoubleToInt64Bits(x);
-            long ybits = BitConverter.DoubleToInt64Bits(y);
-            if ((xbits ^ ybits) < 0)
-                BitConverter.Int64BitsToDouble(xbits ^ long.MinValue);
-            return x;
-        }
         public static List<T> SubList<T>(this List<T> list, int from, int to) => list.GetRange(from, to - from);
         public static double ToDeg(this double rad) => rad * (180.0 / Math.PI);
         public static double ToRad(this double deg) => Math.PI * deg / 180.0;
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumerable, Action<T> forEach)
+        {
+            foreach (T t in enumerable)
+                forEach(t);
+            return enumerable;
+        }
     }
 }

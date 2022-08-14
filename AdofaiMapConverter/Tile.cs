@@ -9,9 +9,8 @@ using AdofaiMapConverter.Helpers;
 
 namespace AdofaiMapConverter
 {
-    public class Tile
+    public class Tile : System.ICloneable
     {
-        public Tile() { }
         public Tile(TileAngle angle)
             => this.angle = angle;
         public TileAngle angle = TileAngle.Zero;
@@ -20,7 +19,7 @@ namespace AdofaiMapConverter
         public Dictionary<LevelEventType, List<Action>> actions = new Dictionary<LevelEventType, List<Action>>();
         public bool AddAction(Action action)
         {
-            List<Action> actions = this.actions.GetValueSafeOrAdd(action.eventType, new List<Action>());
+            List<Action> actions = GetActions(action.eventType);
             if (action.eventType.IsSingleOnly() && actions.Any())
                 return false;
             actions.Add(action);
@@ -36,6 +35,7 @@ namespace AdofaiMapConverter
         }
         public List<Action> GetActions(LevelEventType let)
             => actions.GetValueSafeOrAdd(let, new List<Action>());
+        public bool RemoveActions(LevelEventType let) => actions.Remove(let);
         private void AssertCanAdd(List<Action> actions)
         {
             if (actions.Count <= 0) return;
@@ -52,7 +52,7 @@ namespace AdofaiMapConverter
             {
                 LevelEventType let = kvp.Key;
                 List<Action> list = kvp.Value;
-                List<Action> destList = actions.GetValueSafeOrAdd(let, new List<Action>());
+                List<Action> destList = GetActions(let);
                 destList.AddRange(list);
                 if (let.IsSingleOnly())
                 {
@@ -63,7 +63,7 @@ namespace AdofaiMapConverter
                                 bool hasTwirl = (destList.Count % 2) == 1;
                                 destList.Clear();
                                 if (hasTwirl)
-                                    destList.Add(new Twirl(true));
+                                    destList.Add(new Twirl());
                                 break;
                             }
                         default:
@@ -81,7 +81,7 @@ namespace AdofaiMapConverter
         public void MakeMeta(TileMeta prevMeta, TileAngle nextAngle)
             => tileMeta = new TileMeta(actions, prevMeta, angle, nextAngle);
         public void MakeMetaLast(TileMeta prevMeta)
-            => tileMeta = new TileMeta(actions, prevMeta, angle, angle.isMidspin ? (TileAngle)prevMeta.staticAngle.GeneralizeAngle() : angle);
+            => tileMeta = new TileMeta(actions, prevMeta, angle, angle.isMidspin ? TileAngle.CreateNormal(prevMeta.staticAngle) : angle);
         public void EditActions<T>(LevelEventType let, System.Func<T, T> function) where T : Action
         {
             List<Action> actions = this.actions.GetValueSafeOrAdd(let, new List<Action>());
@@ -93,12 +93,11 @@ namespace AdofaiMapConverter
             => actions.GetValueSafeOrAdd(let, new List<Action>()).ForEach(a => function((T)a));
         public Tile Copy()
         {
-            Tile tile = new Tile(TileAngle.Zero);
-            foreach (var kvp in actions)
-                tile.AddActions(kvp.Value);
-            tile.decorations = new List<Decoration>(decorations);
-            tile.angle = angle;
+            Tile tile = new Tile(angle.isMidspin ? TileAngle.Midspin : new TileAngle(angle.Angle));
+            tile.actions = actions;
+            tile.decorations = decorations;
             return tile;
         }
+        public object Clone() => Copy();
     }
 }

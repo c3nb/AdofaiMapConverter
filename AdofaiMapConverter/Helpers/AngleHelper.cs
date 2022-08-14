@@ -106,13 +106,13 @@ namespace AdofaiMapConverter.Helpers
                     if (tuple.Item2)
                         staticAngle = GeneralizeAngle(staticAngle + 180 - tuple.Item1);
                     else staticAngle = tuple.Item1;
-                    result.Add((TileAngle)GeneralizeAngle(staticAngle));
+                    result.Add(TileAngle.CreateNormal(staticAngle));
                 }
             }
             return result;
         }
-        public static List<TileAngle> ReadAngleData(JsonNode node)
-            => node.Values.Select(n => n.AsDouble).Select(d => d == 999 ? TileAngle.Midspin : (TileAngle)GeneralizeAngle(d)).ToList();
+        public static List<TileAngle> ReadAngleData(IEnumerable<double> angles)
+            => angles.Select(d => d == 999 ? TileAngle.Midspin : TileAngle.CreateNormal(d)).ToList();
         public static char GetCharFromAngle(double curAngle, double nextAngle)
         {
             if (curAngle == 999) return '!';
@@ -124,10 +124,11 @@ namespace AdofaiMapConverter.Helpers
         }
         public static Result CalculateAngleData(double prevStaticAngle, TileAngle curAngle, TileAngle nextAngle, double planetAngle, bool reversed)
         {
-            double curStaticAngle = curAngle.isMidspin ? prevStaticAngle : curAngle.angle;
-            double curTravelAngle = 0;
+            double curStaticAngle = curAngle.isMidspin ? prevStaticAngle : curAngle.Angle;
+            double curTravelAngle;
             if (nextAngle.isMidspin)
             {
+                curTravelAngle = 0;
                 if (curAngle.isMidspin)
                 {
                     curStaticAngle += planetAngle;
@@ -136,7 +137,7 @@ namespace AdofaiMapConverter.Helpers
             }
             else
             {
-                curTravelAngle = curStaticAngle - nextAngle.angle;
+                curTravelAngle = curStaticAngle - nextAngle.Angle;
                 if (reversed)
                     curTravelAngle = -curTravelAngle;
                 if (!curAngle.isMidspin)

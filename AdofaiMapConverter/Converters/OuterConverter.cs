@@ -1,11 +1,7 @@
-﻿using System;
+﻿using AdofaiMapConverter.Actions;
+using AdofaiMapConverter.Types;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AdofaiMapConverter.Types;
-using AdofaiMapConverter.Actions;
-using AdofaiMapConverter.Helpers;
 
 namespace AdofaiMapConverter.Converters
 {
@@ -21,8 +17,8 @@ namespace AdofaiMapConverter.Converters
                 {
                     Tile firstTile = newTiles[0];
                     if (!firstTile.GetActions(LevelEventType.Twirl).Any())
-                        firstTile.AddAction(new Twirl());
-                    else firstTile.GetActions(LevelEventType.Twirl).Clear();
+                        _ = firstTile.AddAction(new Twirl());
+                    else firstTile.RemoveActions(LevelEventType.Twirl);
                 }
                 return newTiles;
             });

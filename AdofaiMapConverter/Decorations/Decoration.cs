@@ -16,5 +16,6 @@ namespace AdofaiMapConverter.Decorations
         public Decoration(LevelEventType eventType) : base(eventType, true) 
             => visible = true;
         public new Decoration Copy() => DecorationUtils.ParseDecoration(ToNode());
+        public new object Clone() => Copy();
     }
 }

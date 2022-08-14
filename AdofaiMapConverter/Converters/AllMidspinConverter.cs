@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AdofaiMapConverter.Actions;
+﻿using AdofaiMapConverter.Helpers;
 using AdofaiMapConverter.Types;
-using AdofaiMapConverter.Helpers;
+using System;
+using System.Collections.Generic;
 
 namespace AdofaiMapConverter.Converters
 {
@@ -24,8 +20,10 @@ namespace AdofaiMapConverter.Converters
                 List<Tile> oneTimingTiles = ae.oneTimingTiles;
                 TileMeta lastTileMeta = oneTimingTiles[oneTimingTiles.Count - 1].tileMeta;
                 double travelAngle = TileMeta.CalculateTotalTravelAngle(oneTimingTiles);
-                List<Tile> newTiles = new List<Tile>();
-                newTiles.Add(new Tile((TileAngle)staticAngle.GeneralizeAngle()));
+                List<Tile> newTiles = new List<Tile>
+                {
+                    new Tile(TileAngle.CreateNormal(staticAngle))
+                };
                 for (int i = 0; i < midspinAmount; i++)
                 {
                     staticAngle = AngleHelper.GetNextStaticAngle(staticAngle, 0, lastTileMeta.PlanetAngle, lastTileMeta.reversed);

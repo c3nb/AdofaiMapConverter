@@ -11,9 +11,7 @@ namespace AdofaiMapConverter.Actions
     {
         private JsonNode raw;
         public UnknownAction() : base(LevelEventType.None) { }
-        public UnknownAction(JsonNode raw) : this()
-            => this.raw = raw;
-        public override JsonNode ToNode()
-            => raw;
+        public UnknownAction(JsonNode raw) : this() => this.raw = raw;
+        public override JsonNode ToNode() => raw;
     }
 }

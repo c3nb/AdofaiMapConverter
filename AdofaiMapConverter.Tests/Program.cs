@@ -10,6 +10,7 @@ using AdofaiMapConverter.Actions;
 using AdofaiMapConverter.Types;
 using AdofaiMapConverter.Helpers;
 using AdofaiMapConverter.Converters;
+using AdofaiMapConverter.Converters.Effects;
 
 namespace AdofaiMapConverter.Tests
 {
@@ -18,8 +19,14 @@ namespace AdofaiMapConverter.Tests
         static void Main(string[] args)
         {
             CustomLevel lev = CustomLevel.Read(JsonNode.Parse(File.ReadAllText("Plum-R2 _Return to_\\main.adofai")));
-            var level = OuterConverter.Convert(lev).ToNode().ToString(4);
+            //CustomLevel il = CustomLevel.Read(JsonNode.Parse(File.ReadAllText("iL_Remake\\iL.adofai")));
+            var level = NonEffectConverter.Convert(LinearConverter.Convert(lev), LevelEventType.MoveCamera).ToNode().ToString(4);
             File.WriteAllText("Plum-R2 _Return to_\\COPY.adofai", level, Encoding.UTF8);
+        }
+        public static IEnumerable<double> Range(int from, int to, int unit = 1)
+        {
+            for (int i = from; i <= to; i += unit)
+                yield return i;
         }
         static void GenActClasses()
         {

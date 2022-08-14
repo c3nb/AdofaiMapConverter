@@ -9,7 +9,7 @@ using MT = System.Math;
 
 namespace AdofaiMapConverter
 {
-    public class TileMeta
+    public class TileMeta : System.ICloneable
     {
         public int floor;
         public double bpm;
@@ -40,6 +40,7 @@ namespace AdofaiMapConverter
             tileMeta.editorY = editorY;
             return tileMeta;
         }
+        public object Clone() => Copy();
         TileMeta() { }
         public TileMeta(Dictionary<LevelEventType, List<Action>> actions, LevelSetting levelSetting, TileAngle nextAngle)
         {
