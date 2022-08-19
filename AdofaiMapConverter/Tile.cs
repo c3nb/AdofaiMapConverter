@@ -11,6 +11,7 @@ namespace AdofaiMapConverter
 {
     public class Tile : System.ICloneable
     {
+        public Tile() : this(TileAngle.Zero) { }
         public Tile(TileAngle angle)
             => this.angle = angle;
         public TileAngle angle = TileAngle.Zero;

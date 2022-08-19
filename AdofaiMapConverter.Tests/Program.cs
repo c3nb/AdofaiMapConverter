@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.IO;
 using JSON;
+using System.Threading;
 using System.Reflection;
 using AdofaiMapConverter.Actions;
 using AdofaiMapConverter.Types;
+using AdofaiMapConverter.Generators;
 using AdofaiMapConverter.Helpers;
+using System.Drawing;
 using AdofaiMapConverter.Converters;
 using AdofaiMapConverter.Converters.Effects;
+using OpenCvSharp;
 
 namespace AdofaiMapConverter.Tests
 {
@@ -18,10 +23,13 @@ namespace AdofaiMapConverter.Tests
     {
         static void Main(string[] args)
         {
-            CustomLevel lev = CustomLevel.Read(JsonNode.Parse(File.ReadAllText("Plum-R2 _Return to_\\main.adofai")));
+            Bitmap image = new Bitmap(Image.FromFile("scr.png"));
+            var lev = ImageGenerator.Generate(image, 256, 144).ToNode().ToString(4);
+            File.WriteAllText("scr.adofai", lev, Encoding.UTF8);
+            //CustomLevel lev = CustomLevel.Read(JsonNode.Parse(File.ReadAllText("Plum-R2 _Return to_\\main.adofai")));
             //CustomLevel il = CustomLevel.Read(JsonNode.Parse(File.ReadAllText("iL_Remake\\iL.adofai")));
-            var level = NonEffectConverter.Convert(LinearConverter.Convert(lev), LevelEventType.MoveCamera).ToNode().ToString(4);
-            File.WriteAllText("Plum-R2 _Return to_\\COPY.adofai", level, Encoding.UTF8);
+            //var level = NonEffectConverter.Convert(LinearConverter.Convert(lev), LevelEventType.MoveCamera).ToNode().ToString(4);
+            //File.WriteAllText("Plum-R2 _Return to_\\COPY.adofai", level, Encoding.UTF8);
         }
         public static IEnumerable<double> Range(int from, int to, int unit = 1)
         {

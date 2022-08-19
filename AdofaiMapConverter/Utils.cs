@@ -48,5 +48,20 @@ namespace AdofaiMapConverter
                 forEach(t);
             return enumerable;
         }
+        public static List<List<T>> Seperate<T>(this List<T> list, int count)
+        {
+            var result = new List<List<T>>();
+            var origCount = list.Count;
+            for (int i = 0; i < origCount; i += count)
+                result.Add(list.RemoveAndGet(0, Math.Min(list.Count, count)));
+            return result;
+        }
+        public static List<T> RemoveAndGet<T>(this List<T> list, int index, int count)
+        {
+            var toReturn = list.GetRange(index, count);
+            list.RemoveRange(index, count);
+            return toReturn;
+
+        }    
     }
 }
