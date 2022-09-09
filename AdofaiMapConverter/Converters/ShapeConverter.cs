@@ -26,7 +26,7 @@ namespace AdofaiMapConverter.Converters
                 var ts = shapeAngles.Select(d => d == 999 ? new Tile(TileAngle.Midspin) : new Tile(TileAngle.CreateNormal(d))).ToList();
                 ts.Add(new Tile(TileAngle.Zero));
                 shapeLevel.Tiles = ts;
-                _ = shapeLevel.MakeTiles();
+                shapeLevel.MakeTiles();
                 shapeLevel.Tiles.RemoveAt(0);
                 shapeTiles = shapeLevel.Tiles;
             }

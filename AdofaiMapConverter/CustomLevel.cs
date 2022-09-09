@@ -49,7 +49,8 @@ namespace AdofaiMapConverter
             if (ac is JsonLazyCreator)
                 throw new System.InvalidOperationException("actions Not Found.");
             LevelSetting setting = LevelSetting.FromNode(s);
-            if (setting.version > 9) throw new System.NotSupportedException("This MapConverter Does Not Supports Greater Then Version 9.");
+            if (setting.version > 10)
+                System.Console.WriteLine("This MapConverter May Not Work Normally On Greater Then Version 10.");
             List<TileAngle> tileAngles = hasNotpd ? AngleHelper.ReadAngleData(ad.Values.Select(n => n.AsDouble)) : AngleHelper.ReadPathData(pd.ToString().TrimLR());
             tileAngles.Insert(0, TileAngle.Zero);
             Dictionary<int, List<Decoration>> decorations = new Dictionary<int, List<Decoration>>();
