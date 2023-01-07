@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if OPENCV
+using System.Collections.Generic;
 using System.Drawing;
 using AdofaiMapConverter.Types;
 using System;
@@ -88,3 +89,4 @@ namespace AdofaiMapConverter.Generators
         }
     }
 }
+#endif
